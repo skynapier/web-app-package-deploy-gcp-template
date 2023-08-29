@@ -40,17 +40,11 @@ jobs:
           repository: skynapier/web-server-template
           path: ./web-server
           token: ${{ secrets.GH_TOKEN }}
-          
-      - name: Debug Environment Variables
-        run: |
-          echo "GCP_LOCATION: $GCP_LOCATION"
-          echo "GCP_PROJECT_ID: $GCP_PROJECT_ID"
-          echo "GCP_GAR_REPO: $GCP_GAR_REPO"
 
       - name: Build/Push Dockerfile to ACR
         shell: bash
         run: |
           docker build . \
-            -t ${{env.GCP_LOCATION}}-docker.pkg.dev/${{env.GCP_PROJECT_ID}}/${{env.GCP_GAR_REPO}}/${{ github.event.repository.name }}:latest
+            -t ${{vars.GCP_LOCATION}}-docker.pkg.dev/${{vars.GCP_PROJECT_ID}}/${{vars.GCP_GAR_REPO}}/${{ github.event.repository.name }}:latest
 
           docker images
