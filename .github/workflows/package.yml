@@ -51,6 +51,7 @@ jobs:
         name: 'Authenticate to Google Cloud'
         uses: 'google-github-actions/auth@v1'
         with:
+          token_format: 'access_token'
           credentials_json: ${{ secrets.GCP_GAR_SA_CREDENTIALS }}
           # Either user Workload Identity Federation or Service Account Keys. See
           # above more more examples
