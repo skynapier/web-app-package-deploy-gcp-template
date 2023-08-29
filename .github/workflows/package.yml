@@ -69,4 +69,4 @@ jobs:
           docker build . \
             -t ${{vars.GCP_LOCATION}}-docker.pkg.dev/${{vars.GCP_PROJECT_ID}}/${{vars.GCP_GAR_REPO}}/${{ github.event.repository.name }}:latest
 
-          docker images
+          docker push ${{vars.GCP_LOCATION}}-docker.pkg.dev/${{vars.GCP_PROJECT_ID}}/${{vars.GCP_GAR_REPO}}/${{ github.event.repository.name }}:latest
