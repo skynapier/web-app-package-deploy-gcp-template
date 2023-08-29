@@ -1,0 +1,1 @@
+gcloud app deploy --image-url=australia-southeast1-docker.pkg.dev/serious-mariner-353521/bydh/bydh-web:latest

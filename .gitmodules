@@ -1,0 +1,6 @@
+[submodule "web-server"]
+	path = web-server
+	url = https://github.com/skynapier/web-server-template.git
+[submodule "web-client"]
+	path = web-client
+	url = https://github.com/skynapier/react-template.git
