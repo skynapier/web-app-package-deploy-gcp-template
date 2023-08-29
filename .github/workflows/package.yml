@@ -1,11 +1,12 @@
 name: Package
-run-name: ${{ inputs.version }}
+# run-name: ${{ inputs.version }}
 
 on:
+  push:
   workflow_dispatch:
-    inputs:
-      version:
-        description: Package Version
+    # inputs:
+    #   version:
+    #     description: Package Version
 
 concurrency:
   group: ${{github.workflow}}-${{ github.ref }}
@@ -21,8 +22,8 @@ jobs:
     steps:
       - name: Checkout Source
         uses: actions/checkout@v3
-        with:
-          ref: ${{ inputs.version }}
+        # with:
+        #   ref: ${{ inputs.version }}
 
       # Github does not allow submodules to be cloned as part of the default checkout action.
       - name: Checkout Web Client
@@ -45,6 +46,6 @@ jobs:
         shell: bash
         run: |
           docker build . \
-            -t ${{env.GCP_LOCATION}}-docker.pkg.dev/${{env.GCP_PROJECT_ID}}/${{env.GCP_GAR_REPO}}/${{ github.event.repository.name }}:${{ inputs.version }}
+            -t ${{env.GCP_LOCATION}}-docker.pkg.dev/${{env.GCP_PROJECT_ID}}/${{env.GCP_GAR_REPO}}/${{ github.event.repository.name }}:latest
 
           docker images
