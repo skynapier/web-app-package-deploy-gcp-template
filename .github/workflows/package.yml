@@ -44,7 +44,7 @@ jobs:
       - name: Decode JSON Secret
         run: |
           echo "${{ secrets.GCP_GAR_SA_CREDENTIALS }}" | base64 -d > gar_sa_credentials.json
-          cat $gar_sa_credentials.json
+          cat gar_sa_credentials.json
 
 
       - id: 'auth'
