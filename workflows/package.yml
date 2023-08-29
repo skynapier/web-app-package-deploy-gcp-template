@@ -1,0 +1,50 @@
+name: Package
+run-name: ${{ inputs.version }}
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Package Version
+
+concurrency:
+  group: ${{github.workflow}}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+
+jobs:
+  Package:
+    runs-on: ubuntu-latest
+    environment: dev
+    steps:
+      - name: Checkout Source
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ inputs.version }}
+
+      # Github does not allow submodules to be cloned as part of the default checkout action.
+      - name: Checkout Web Client
+        uses: actions/checkout@v3
+        with:
+          repository: skynapier/react-template
+          path: ./web-client
+          token: ${{ secrets.GH_TOKEN }}
+
+      # Github does not allow submodules to be cloned as part of the default checkout action.
+      - name: Checkout Web Server
+        uses: actions/checkout@v3
+        with:
+          repository: skynapier/web-server-template
+          path: ./web-server
+          token: ${{ secrets.GH_TOKEN }}
+
+
+      - name: Build/Push Dockerfile to ACR
+        shell: bash
+        run: |
+          docker build . \
+            -t ${{env.GCP_LOCATION}}-docker.pkg.dev/${{env.GCP_PROJECT_ID}}/${{env.GCP_GAR_REPO}}/${{ github.event.repository.name }}:${{ inputs.version }}
+
+          docker images
