@@ -41,6 +41,25 @@ jobs:
           path: ./web-server
           token: ${{ secrets.GH_TOKEN }}
 
+      - name: Decode JSON Secret
+        run: echo "${{ secrets.GCP_GAR_SA_CREDENTIALS }}" | base64 -d > gar_sa_credentials.json
+
+
+      - id: 'auth'
+        name: 'Authenticate to Google Cloud'
+        uses: 'google-github-actions/auth@v1'
+        with:
+          credentials_json: gar_sa_credentials.json
+          # Either user Workload Identity Federation or Service Account Keys. See
+          # above more more examples
+
+      # This example uses the docker login action
+      - uses: 'docker/login-action@v1'
+        with:
+          registry: '${{vars.GCP_LOCATION}}-docker.pkg.dev'
+          username: 'oauth2accesstoken'
+          password: '${{ steps.auth.outputs.access_token }}'
+
       - name: Build/Push Dockerfile to ACR
         shell: bash
         run: |
