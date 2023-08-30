@@ -24,10 +24,11 @@ FROM node:20-slim as runner
 ENV PORT=
 
 COPY --from=build /app/client /app/client
-COPY --from=build /app/output/src/index.js /app/app.js
-COPY --from=build /app/web-client/package.json /app/package.json
+COPY --from=build /app/output/src /app
+COPY --from=build /app/web-server/package.json /app/package.json
 
 WORKDIR /app
+RUN mv index.js app.js
 RUN npm install 
 
 ENTRYPOINT [ "node", "app.js" ]
