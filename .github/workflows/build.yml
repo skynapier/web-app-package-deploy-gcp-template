@@ -1,0 +1,109 @@
+name: Action Naive Build
+# run-name: ${{ inputs.version }}
+
+on:
+  push:
+  workflow_dispatch:
+
+concurrency:
+  group: ${{github.workflow}}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+
+jobs:
+  Build-Package:
+    runs-on: ubuntu-latest
+    environment: dev
+    container:
+      image: node:20
+      options: --rm --entrypoint=""
+    steps:
+      - name: Checkout Source
+        uses: actions/checkout@v3
+
+      # Github does not allow submodules to be cloned as part of the default checkout action.
+      - name: Checkout Web Client
+        uses: actions/checkout@v3
+        with:
+          repository: skynapier/react-template
+          path: ./web-client
+          token: ${{ secrets.GH_TOKEN }}
+
+      # Github does not allow submodules to be cloned as part of the default checkout action.
+      - name: Checkout Web Server
+        uses: actions/checkout@v3
+        with:
+          repository: skynapier/web-server-template
+          path: ./web-server
+          token: ${{ secrets.GH_TOKEN }}
+
+      - name: Install Dependencies
+        run: |
+          apt-get update && apt install tree
+          npm install -g typescript
+
+      - name: Build Web Client
+        run: |
+          cd web-client 
+          rm package-lock.json
+          npm install && npm run build
+          cd ../
+
+      - name: Build Web Server
+        run: |
+          cd web-server
+          npm install && tsc
+          cd ../
+      
+      - name: Move Content to APP dir
+        run: |
+          mkdir app && mv client app/client && mv output/src/* app && mv app/index.js app/app.js
+          mv web-server/node_modules app
+          mv gcp-gap-configurations/app-standard.yaml app/app.yaml
+
+      - name: Zip Web App
+        uses: vimtor/action-zip@v1
+        with:
+          files: app/
+          recursive: true
+          dest: web-app.zip 
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: web-app
+          path: web-app.zip
+          retention-days: 1
+
+  Release:
+    environment: dev
+    needs: Build-Package
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download Artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: web-app
+
+      - name: Decode JSON GCP Auth Key Secret
+        run: |
+          echo "${{ secrets.GCP_GAR_SA_CREDENTIALS }}" | base64 -d > gar_sa_credentials.json
+          cat gar_sa_credentials.json
+
+      - id: 'auth'
+        name: Authenticate to Google Cloud
+        uses: 'google-github-actions/auth@v1'
+        with:
+          token_format: 'access_token'
+          credentials_json: ${{ secrets.GCP_GAR_SA_CREDENTIALS }}
+
+      - name: 'Set up Cloud SDK'
+        uses: 'google-github-actions/setup-gcloud@v1'
+
+      - name: 'Use gcloud CLI'
+        run: |
+          gcloud info
+          unzip web-app.zip -d web-app-directory
+          gcloud app deploy web-app-directory
