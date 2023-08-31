@@ -57,6 +57,12 @@ jobs:
           npm install && tsc
           cd ../
       
+      - name: Compile app.yaml
+        uses: ikuanyshbekov/app-yaml-env-compiler@v1.0
+        env:
+          SMTP_USER: ${{vars.SMTP_USER}}
+          SMTP_PWD: ${{ secrets.SMTP_SECRET }}
+    
       - name: Move Content to APP dir
         run: |
           mkdir app && mv client app/client && mv output/src/* app && mv app/index.js app/server.js

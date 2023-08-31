@@ -3,8 +3,8 @@ runtime: nodejs20 # or another supported version
 instance_class: F1
 
 env_variables:
-  SMTP_USER: "bydh.nz@gmail.com"
-  SMTP_PWD: 
+  SMTP_USER: $SMTP_USER
+  SMTP_PWD: $SMTP_SECRET
 
 
 # handlers:
