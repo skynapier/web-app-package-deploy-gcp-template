@@ -59,8 +59,8 @@ jobs:
       
       - name: Move Content to APP dir
         run: |
-          mkdir app && mv client app/client && mv output/src/* app && mv app/index.js app/app.js
-          mv web-server/node_modules app
+          mkdir app && mv client app/client && mv output/src/* app && mv app/index.js app/server.js
+          mv package.json app/package.json
           mv gcp-gap-configurations/app-standard.yaml app/app.yaml
 
       - name: Zip Web App
@@ -102,7 +102,7 @@ jobs:
       - name: 'Set up Cloud SDK'
         uses: 'google-github-actions/setup-gcloud@v1'
 
-      - name: 'Use gcloud CLI'
+      - name: Deploy to GAE
         run: |
           gcloud info
           unzip web-app.zip -d web-app-directory

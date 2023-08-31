@@ -1,5 +1,4 @@
 runtime: nodejs20 # or another supported version
-entrypoint: node app.js
 
 instance_class: F1
 
@@ -8,6 +7,7 @@ env_variables:
   SMTP_PWD: 
 
 service: bydh-web-prod
+
 
 # handlers:
 # - url: /stylesheets
