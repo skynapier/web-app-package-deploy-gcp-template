@@ -62,8 +62,7 @@ jobs:
         run: |
           mkdir app && mv client app/client && mv output/src/* app && mv app/index.js app/server.js
           mv package.json app/package.json
-          mv gcp-gap-configurations/app-standard.yaml app/app.yaml
-          cd app
+          mv gcp-gap-configurations/app-standard.yaml app.yaml
 
       - name: Compile app.yaml
         uses: ikuanyshbekov/app-yaml-env-compiler@v1.0
@@ -73,7 +72,7 @@ jobs:
     
       - name: Move Back
         run: |
-          cd ../
+          mv app.yaml app/
     
 
       - name: Zip Web App
