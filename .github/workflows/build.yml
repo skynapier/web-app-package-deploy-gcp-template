@@ -68,7 +68,7 @@ jobs:
         uses: ikuanyshbekov/app-yaml-env-compiler@v1.0
         env:
           SMTP_USER: ${{vars.SMTP_USER}}
-          SMTP_PWD: ${{ secrets.SMTP_SECRET }}
+          SMTP_PWD: ${{ secrets.SMTP_PWD }}
     
       - name: Move Back
         run: |

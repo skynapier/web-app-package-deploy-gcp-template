@@ -4,7 +4,7 @@ instance_class: F1
 
 env_variables:
   SMTP_USER: $SMTP_USER
-  SMTP_PWD: $SMTP_SECRET
+  SMTP_PWD: $SMTP_PWD
 
 
 # handlers:
