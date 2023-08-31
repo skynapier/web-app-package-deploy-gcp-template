@@ -6,8 +6,6 @@ env_variables:
   SMTP_USER: "bydh.nz@gmail.com"
   SMTP_PWD: 
 
-service: bydh-web-prod
-
 
 # handlers:
 # - url: /stylesheets
