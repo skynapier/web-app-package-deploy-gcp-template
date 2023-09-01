@@ -73,7 +73,6 @@ jobs:
       - name: Move Back
         run: |
           mv app.yaml app/
-    
 
       - name: Zip Web App
         uses: vimtor/action-zip@v1

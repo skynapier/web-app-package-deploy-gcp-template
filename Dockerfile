@@ -7,9 +7,9 @@ WORKDIR /app
 
 COPY web-client web-client
 COPY web-server web-server
+COPY package.json package.json
 
 WORKDIR /app/web-client 
-RUN rm package-lock.json
 RUN npm install
 RUN npm run build
 
@@ -25,7 +25,7 @@ ENV PORT=
 
 COPY --from=build /app/client /app/client
 COPY --from=build /app/output/src /app
-COPY --from=build /app/web-server/package.json /app/package.json
+COPY --from=build /app/package.json /app/package.json
 
 WORKDIR /app
 RUN mv index.js app.js
