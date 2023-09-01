@@ -47,7 +47,6 @@ jobs:
       - name: Build Web Client
         run: |
           cd web-client 
-          rm package-lock.json
           npm install && npm run build
           cd ../
 
