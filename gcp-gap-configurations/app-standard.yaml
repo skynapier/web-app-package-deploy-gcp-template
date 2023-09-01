@@ -7,9 +7,6 @@ env_variables:
   SMTP_PWD: $SMTP_PWD
 
 
-handlers:
-  - url: /static
-    static_dir: /client
 
 # handlers:
 # - url: /stylesheets
